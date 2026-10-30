@@ -9,11 +9,14 @@ const payloadSchema = z.object({
   role: z.string().trim().max(80).default(""),
   company: z.string().trim().max(80).default(""),
   bio: z.string().trim().max(180).default(""),
+  currentProjects: z.string().trim().max(500).default(""),
+  pastProjects: z.string().trim().max(500).default(""),
   email: z.string().trim().max(120).default(""),
   phone: z.string().trim().max(40).default(""),
   website: z.string().trim().max(180).default(""),
   social: z.string().trim().max(80).default(""),
-  theme: z.enum(["cobalt", "ink", "sand"]).default("cobalt"),
+  theme: z.enum(["cobalt", "ink", "sand", "custom"]).default("cobalt"),
+  customColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).default("#7c3aed"),
 });
 
 const alphabet = "23456789abcdefghjkmnpqrstuvwxyz";

@@ -10,6 +10,7 @@ const themeOptions: Array<{ id: CardTheme; label: string; colors: string[] }> = 
   { id: "cobalt", label: "Cobalt", colors: ["#2356e8", "#b8ff4f"] },
   { id: "ink", label: "Ink", colors: ["#171717", "#ff6a3d"] },
   { id: "sand", label: "Sand", colors: ["#eee7d7", "#0f766e"] },
+  { id: "custom", label: "カスタム", colors: [] },
 ];
 
 export function CardStudio() {
@@ -89,20 +90,7 @@ export function CardStudio() {
 
       <div className="mx-auto grid max-w-[1380px] lg:grid-cols-[minmax(0,1.05fr)_minmax(440px,.95fr)]">
         <section className="px-5 py-10 sm:px-8 lg:px-12 lg:py-14 xl:px-20">
-          <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#2356e8]/15 bg-[#2356e8]/7 px-3 py-1.5 text-[11px] font-bold text-[#2356e8]">
-              <Sparkles className="h-3.5 w-3.5" />
-              3分で完成・アプリ不要
-            </div>
-            <h1 className="max-w-xl text-[clamp(2.8rem,6vw,5.2rem)] font-extrabold leading-[.94] tracking-[-.065em]">
-              会った瞬間を、<br />つながりに変える。
-            </h1>
-            <p className="mt-6 max-w-lg text-sm leading-7 text-black/55 sm:text-base">
-              あなたらしいデジタル名刺をつくって、短いURLでシェア。NFCタグにも、そのまま書き込めます。
-            </p>
-          </div>
-
-          <form onSubmit={createCard} className="mt-12 max-w-2xl space-y-9">
+          <form onSubmit={createCard} className="max-w-2xl space-y-9">
             <fieldset>
               <legend className="mb-4 flex items-center gap-3 text-sm font-bold">
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-[10px] text-white">1</span>
@@ -143,9 +131,30 @@ export function CardStudio() {
             <fieldset>
               <legend className="mb-4 flex items-center gap-3 text-sm font-bold">
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-[10px] text-white">3</span>
+                プロジェクト
+              </legend>
+              <div className="grid gap-4">
+                <ProjectField
+                  label="現在開催中のプロジェクト・これからやるプロジェクト"
+                  value={card.currentProjects}
+                  onChange={(value) => update("currentProjects", value)}
+                  placeholder="進行中の活動や、これから予定しているプロジェクトを記入"
+                />
+                <ProjectField
+                  label="すでに行ったプロジェクト"
+                  value={card.pastProjects}
+                  onChange={(value) => update("pastProjects", value)}
+                  placeholder="これまでに手がけたプロジェクトや実績を記入"
+                />
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className="mb-4 flex items-center gap-3 text-sm font-bold">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-black text-[10px] text-white">4</span>
                 カラーテーマ
               </legend>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {themeOptions.map((theme) => (
                   <button
                     key={theme.id}
@@ -154,14 +163,33 @@ export function CardStudio() {
                     className={`flex items-center justify-between rounded-2xl border p-3 text-left text-xs font-bold transition ${card.theme === theme.id ? "border-black bg-white shadow-sm" : "border-black/10 bg-white/45 hover:bg-white/75"}`}
                     aria-pressed={card.theme === theme.id}
                   >
-                    <span className="flex -space-x-1">
-                      {theme.colors.map((color) => <span key={color} className="h-5 w-5 rounded-full border-2 border-white" style={{ background: color }} />)}
-                    </span>
-                    <span className="hidden sm:inline">{theme.label}</span>
+                    {theme.id === "custom" ? (
+                      <span className="h-5 w-5 rounded-full border-2 border-white shadow-sm" style={{ background: card.customColor }} />
+                    ) : (
+                      <span className="flex -space-x-1">
+                        {theme.colors.map((color) => <span key={color} className="h-5 w-5 rounded-full border-2 border-white" style={{ background: color }} />)}
+                      </span>
+                    )}
+                    <span>{theme.label}</span>
                     {card.theme === theme.id && <Check className="h-4 w-4" />}
                   </button>
                 ))}
               </div>
+              {card.theme === "custom" && (
+                <div className="mt-3 flex items-center gap-3 rounded-2xl border border-black/10 bg-white/55 p-3">
+                  <input
+                    type="color"
+                    value={card.customColor}
+                    onChange={(event) => update("customColor", event.target.value)}
+                    className="h-10 w-12 cursor-pointer rounded-lg border-0 bg-transparent p-0"
+                    aria-label="好きな色を選択"
+                  />
+                  <div>
+                    <p className="text-xs font-bold">好きな色を選択</p>
+                    <p className="mt-0.5 font-mono text-[10px] uppercase text-black/45">{card.customColor}</p>
+                  </div>
+                </div>
+              )}
             </fieldset>
 
             {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
@@ -232,6 +260,22 @@ function Field({ label, value, onChange, placeholder, required = false, type = "
         maxLength={120}
         placeholder={placeholder}
         className="w-full rounded-2xl border border-black/10 bg-white/65 px-4 py-3.5 text-sm outline-none transition placeholder:text-black/25 focus:border-[#2356e8] focus:bg-white focus:ring-4 focus:ring-[#2356e8]/10"
+      />
+    </label>
+  );
+}
+
+function ProjectField({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder: string }) {
+  return (
+    <label>
+      <span className="mb-2 block text-xs font-bold text-black/55">{label}</span>
+      <textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        maxLength={500}
+        rows={4}
+        placeholder={placeholder}
+        className="w-full resize-y rounded-2xl border border-black/10 bg-white/65 px-4 py-3.5 text-sm leading-6 outline-none transition placeholder:text-black/25 focus:border-[#2356e8] focus:bg-white focus:ring-4 focus:ring-[#2356e8]/10"
       />
     </label>
   );

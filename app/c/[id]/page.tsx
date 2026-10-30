@@ -17,11 +17,14 @@ export default async function CardPage({ params }: { params: Promise<{ id: strin
     role: card.role,
     company: card.company,
     bio: card.bio,
+    currentProjects: card.currentProjects,
+    pastProjects: card.pastProjects,
     email: card.email,
     phone: card.phone,
     website: card.website,
     social: card.social,
     theme: card.theme as CardTheme,
+    customColor: card.customColor,
   };
 
   return <PublicCard card={data} />;

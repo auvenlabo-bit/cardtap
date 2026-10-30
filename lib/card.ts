@@ -1,4 +1,4 @@
-export const themeNames = ["cobalt", "ink", "sand"] as const;
+export const themeNames = ["cobalt", "ink", "sand", "custom"] as const;
 export type CardTheme = (typeof themeNames)[number];
 
 export type CardData = {
@@ -7,11 +7,14 @@ export type CardData = {
   role: string;
   company: string;
   bio: string;
+  currentProjects: string;
+  pastProjects: string;
   email: string;
   phone: string;
   website: string;
   social: string;
   theme: CardTheme;
+  customColor: string;
 };
 
 export const defaultCard: CardData = {
@@ -20,11 +23,14 @@ export const defaultCard: CardData = {
   role: "Creative Director",
   company: "Studio Ripple",
   bio: "ブランドとプロダクトの、らしさが伝わる体験をつくっています。",
+  currentProjects: "ブランドリニューアル／新規プロダクトの立ち上げ",
+  pastProjects: "地域文化プロジェクト／D2Cブランドのアートディレクション",
   email: "hello@example.jp",
   phone: "090-1234-5678",
   website: "https://example.jp",
   social: "@taroyamada",
   theme: "cobalt",
+  customColor: "#7c3aed",
 };
 
 export function initials(name: string) {

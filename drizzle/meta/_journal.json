@@ -8,6 +8,13 @@
       "when": 1793319811142,
       "tag": "0000_glamorous_kingpin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793320591998,
+      "tag": "0001_exotic_shard",
+      "breakpoints": true
     }
   ]
 }
